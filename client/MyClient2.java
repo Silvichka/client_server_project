@@ -16,7 +16,7 @@ public class MyClient2 {
     }
 
     public void start(){
-        try(Socket socket = new Socket("localhost", 1111)){
+        try(Socket socket = new Socket(serverName, serverPort)){
             BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
             PrintWriter out = new PrintWriter(socket.getOutputStream(), true);
 //            System.out.println("connection etablished");//DEBUG
@@ -26,12 +26,27 @@ public class MyClient2 {
             userName = sc.nextLine();
             out.println(userName);
 
-            String input;
+            Thread readThread = new Thread(() -> {
+                try {
+                    String input;
+                    while ((input = in.readLine()) != null) {
+                        System.out.println(input);
+                    }
+                } catch (IOException e) {
+                    System.out.println("Connection closed by the server.");
+                }
+            });
+            readThread.start();
+
             String message;
-            while((input = in.readLine()) != null){
-                System.out.println(input);
+            while (true) {
                 message = sc.nextLine();
                 out.println(message);
+
+                if ("exit".equalsIgnoreCase(message)) {
+                    System.out.println("Exiting the chat...");
+                    break;
+                }
             }
 
         }catch (IOException e){
