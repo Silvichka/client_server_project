@@ -5,13 +5,16 @@ import client.ServerThread;
 import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.Arrays;
 import java.util.HashSet;
+import java.util.Objects;
 import java.util.Set;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class MyServer {
 
     private ServerSocket ss;
-    private String userName;
     private Set<ServerThread> users = new HashSet<>();
 
     public void start(){
@@ -32,8 +35,47 @@ public class MyServer {
     }
 
     public void broadcast(String message, ServerThread sender) {
-        for (ServerThread user : users) {
-            if(user != sender) user.sendMessage(message);
+        if(Objects.equals(message, "!users")){
+            String temp = "";
+            for (ServerThread user : users){
+                temp += user.getNickname() + " ";
+            }
+            sender.sendMessage(temp);
+        }else if(message.charAt(0) == '@'){
+            Pattern pattern = Pattern.compile("@([^,\\s]+)(?:,\\s*|\\s*)*|(\\S.*)");
+            Matcher matcher = pattern.matcher(message);
+
+            Set<String> tagged = new HashSet<>();
+            String msg = "";
+
+            while (matcher.find()) {
+                if (matcher.group(1) != null) {
+                    tagged.add(matcher.group(1));
+                } else if (matcher.group(2) != null) {
+                    msg = matcher.group(2);
+                }
+            }
+
+            for(ServerThread user: users){
+                if(tagged.contains(user.getNickname())){
+                    user.sendMessage("(" + sender.getNickname() + "): " + msg);
+                }
+            }
+
+        }else{
+            for (ServerThread user: users){
+                if(user != sender) {
+                    user.sendMessage("(" + sender.getNickname() + "): " + message);
+                }
+            }
+        }
+    }
+
+    public void joinChat(String message, ServerThread sender){
+        for (ServerThread user: users){
+            if(user != sender) {
+                user.sendMessage(message);
+            }
         }
     }
 

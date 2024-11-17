@@ -42,11 +42,6 @@ public class MyClient2 {
             while (true) {
                 message = sc.nextLine();
                 out.println(message);
-
-                if ("exit".equalsIgnoreCase(message)) {
-                    System.out.println("Exiting the chat...");
-                    break;
-                }
             }
 
         }catch (IOException e){
