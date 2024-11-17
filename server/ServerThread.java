@@ -1,6 +1,4 @@
-package client;
-
-import server.MyServer;
+package server;
 
 import java.io.*;
 import java.net.Socket;
@@ -27,6 +25,7 @@ public class ServerThread extends Thread{
 
             out.println("Enter your nickname: ");
             nickname = in.readLine();
+            out.println(server.getRules());
             System.out.println(nickname + " has joined the chat");
             server.joinChat(nickname + " has joined the chat", this);
 

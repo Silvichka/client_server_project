@@ -20,7 +20,6 @@ public class MyClient {
         try(Socket socket = new Socket(serverName, serverPort)){
             BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
             PrintWriter out = new PrintWriter(socket.getOutputStream(), true);
-//            System.out.println("connection etablished");//DEBUG
 
             System.out.println(in.readLine());
             Scanner sc = new Scanner(System.in);
@@ -52,13 +51,13 @@ public class MyClient {
 
     public static void main(String[] args) {
         Scanner sc = new Scanner(System.in);
-//        System.out.println("Enter server's address: ");
-//        String name = sc.nextLine();
-//        System.out.println("Enter server's port: ");
-//        int port = sc.nextInt();
-//        sc.nextLine();
+        System.out.println("Enter server's address: ");
+        String name = sc.nextLine();
+        System.out.println("Enter server's port: ");
+        int port = sc.nextInt();
+        sc.nextLine();
 
-        MyClient client = new MyClient("localhost", 1111);
+        MyClient client = new MyClient(name, port);
         client.start();
     }
 }

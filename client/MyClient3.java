@@ -54,13 +54,13 @@ public class MyClient3 {
 
     public static void main(String[] args) {
         Scanner sc = new Scanner(System.in);
-//        System.out.println("Enter server's address: ");
-//        String name = sc.nextLine();
-//        System.out.println("Enter server's port: ");
-//        int port = sc.nextInt();
-//        sc.nextLine();
+        System.out.println("Enter server's address: ");
+        String name = sc.nextLine();
+        System.out.println("Enter server's port: ");
+        int port = sc.nextInt();
+        sc.nextLine();
 
-        MyClient3 client = new MyClient3("localhost", 1111);
+        MyClient3 client = new MyClient3(name, port);
         client.start();
     }
 }
