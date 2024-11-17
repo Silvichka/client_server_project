@@ -45,6 +45,7 @@ public class MyClient {
             }
 
         }catch (IOException e){
+            System.out.println("cannot connect to the server");
             System.exit(1);
         }
     }
