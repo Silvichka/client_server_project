@@ -1,9 +1,9 @@
-package client;
-
-import server.MyServer;
+package server;
 
 import java.io.*;
 import java.net.Socket;
+
+//!users !banned @for_specific \exclude_from_broadcasting /quit
 
 public class ServerThread extends Thread{
     private Socket socket;
@@ -25,12 +25,13 @@ public class ServerThread extends Thread{
 
             out.println("Enter your nickname: ");
             nickname = in.readLine();
+            out.println(server.getRules());
             System.out.println(nickname + " has joined the chat");
-            server.broadcast(nickname + " has joined the chat", this);
+            server.joinChat(nickname + " has joined the chat", this);
 
             String message;
             while((message = in.readLine()) != null){
-                String new_message = "(" + nickname +"): " + message;
+                String new_message = message;
                 System.out.println(new_message);
                 server.broadcast(new_message, this);
             }
@@ -48,5 +49,9 @@ public class ServerThread extends Thread{
 
     public void sendMessage(String message) {
         out.println(message);
+    }
+
+    public String getNickname(){
+        return nickname;
     }
 }

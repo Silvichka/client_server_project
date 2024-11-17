@@ -1,16 +1,19 @@
 package client;
 
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.PrintWriter;
 import java.net.Socket;
 import java.util.Scanner;
 
-public class MyClient2 {
+public class MyClient3 {
 
     private String serverName;
     private int serverPort;
     private String userName;
 
-    public MyClient2(String userName, int serverPort) {
+    public MyClient3(String userName, int serverPort) {
         this.serverPort = serverPort;
         this.userName = userName;
     }
@@ -57,7 +60,7 @@ public class MyClient2 {
         int port = sc.nextInt();
         sc.nextLine();
 
-        MyClient client = new MyClient(name, port);
+        MyClient3 client = new MyClient3(name, port);
         client.start();
     }
 }
