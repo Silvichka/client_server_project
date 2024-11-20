@@ -50,7 +50,7 @@ public class MyServer {
             for (ServerThread user : users){
                 temp += user.getNickname() + " ";
             }
-            sender.sendMessage(temp);
+            sender.sendMessage("(server): " + temp);
         }else if(Objects.equals(message, "!banned")){
             sender.sendMessage(banned.toString());
         }else if (message.charAt(0) == '@'){
@@ -98,7 +98,7 @@ public class MyServer {
             String[] words = message.split("\\W+");
             for (String w: words) {
                 if(banned.contains(w)){
-                    sender.sendMessage("This word is not allowed!!!");
+                    sender.sendMessage("(server): This word is not allowed!!!");
                     break;
                 }else{
                     for (ServerThread user: users){
@@ -181,6 +181,10 @@ public class MyServer {
 
     public String getRules(){
         return rules;
+    }
+
+    public Set<ServerThread> getUsers(){
+        return users;
     }
 
     public static void main(String[] args) {
