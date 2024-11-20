@@ -202,20 +202,8 @@ public class MyServer {
         this.rules = rulesBuilder.toString().trim();
     }
 
-    public Set<String> getBanned() {
-        return banned;
-    }
-
-    public String getServerName() {
-        return serverName;
-    }
-
     public String getRules(){
         return rules;
-    }
-
-    public Set<ServerThread> getUsers(){
-        return users;
     }
 
     public Set<String> getUsersNames(){
@@ -230,5 +218,4 @@ public class MyServer {
         MyServer server = new MyServer("/Users/silvia/JavaProjects/client_server_project/src/server/.configuration.txt");
         server.start();
     }
-
 }
