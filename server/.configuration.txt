@@ -2,12 +2,15 @@ ChebupeliChat
 4892
 
 rules:
+============================================================================
 Welcome to ChebupeliChat,
 here we have commands like:
 !users - to display all users that are on the server
 !banned - to receive list of banned words
+!close - to exit chat
 @user1, user2 - if you want to send message to user1 and user2 only
 /user1 - if you don't want to send message to user1, but to everyone else
+============================================================================
 end;
 
 banned:

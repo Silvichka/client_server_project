@@ -33,10 +33,30 @@ public class MyServer {
 
             while(true){
                 Socket socket = ss.accept();
-//                System.out.println("New user: " + socket);//DEBUG
-                ServerThread serverThread = new ServerThread(socket, this);
-                users.add(serverThread);
-                new Thread(serverThread).start();
+                BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+                PrintWriter out = new PrintWriter(socket.getOutputStream(), true);
+                out.println("Enter your nickname: ");
+                String nickname = "";
+                boolean uniquie = false;
+                while(!uniquie){
+                    nickname = in.readLine();
+                    try{
+                        if(!getUsersNames().isEmpty() && getUsersNames().contains(nickname.toLowerCase())){
+                            out.println(400);
+                            System.out.println("This nick is taken");
+                            out.println("This nickname is taken, enter different one: ");
+                        }else {
+                            out.println(200);
+                            System.out.println("New user: " + nickname);
+                            uniquie = true;
+                            ServerThread serverThread = new ServerThread(socket, this, nickname);
+                            new Thread(serverThread).start();
+                            users.add(serverThread);
+                        }
+                    }catch (NullPointerException e){
+                        System.exit(-1);
+                    }
+                }
             }
 
         }catch (IOException e){
@@ -44,7 +64,7 @@ public class MyServer {
         }
     }
 
-    public void broadcast(String message, ServerThread sender) {
+    public void broadcast(String message, ServerThread sender) throws IOException {
         if(Objects.equals(message, "!users")){
             String temp = "";
             for (ServerThread user : users){
@@ -53,6 +73,14 @@ public class MyServer {
             sender.sendMessage("(server): " + temp);
         }else if(Objects.equals(message, "!banned")){
             sender.sendMessage(banned.toString());
+        }else if(Objects.equals(message, "!close")){
+            for(ServerThread user: users){
+                if(user != sender){
+                    user.sendMessage(sender.getNickname() + " has disconnected");
+                }
+            }
+            System.out.println(sender.getNickname() + " has disconnected");
+            users.remove(sender);
         }else if (message.charAt(0) == '@'){
             Pattern pattern = Pattern.compile("@([^,\\s]+)(?:,\\s*|\\s*)*|(\\S.*)");
             Matcher matcher = pattern.matcher(message);
@@ -94,17 +122,20 @@ public class MyServer {
                     user.sendMessage("(" + sender.getNickname() + "): " + msg);
                 }
             }
-        }else {
+        }else{
             String[] words = message.split("\\W+");
+            boolean ban = false;
             for (String w: words) {
                 if(banned.contains(w)){
                     sender.sendMessage("(server): This word is not allowed!!!");
+                    ban = true;
                     break;
-                }else{
-                    for (ServerThread user: users){
-                        if(user != sender) {
-                            user.sendMessage("(" + sender.getNickname() + "): " + message);
-                        }
+                }
+            }
+            if(!ban){
+                for (ServerThread user: users){
+                    if(user != sender) {
+                        user.sendMessage("(" + sender.getNickname() + "): " + message);
                     }
                 }
             }
@@ -185,6 +216,14 @@ public class MyServer {
 
     public Set<ServerThread> getUsers(){
         return users;
+    }
+
+    public Set<String> getUsersNames(){
+        Set<String> us = new HashSet<>();
+        for(ServerThread user: users){
+            us.add(user.getNickname().toLowerCase());
+        }
+        return us;
     }
 
     public static void main(String[] args) {

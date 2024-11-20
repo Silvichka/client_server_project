@@ -2,6 +2,7 @@ package client;
 
 import java.io.*;
 import java.net.Socket;
+import java.util.Objects;
 import java.util.Scanner;
 
 public class MyClient2 {
@@ -19,12 +20,20 @@ public class MyClient2 {
         try(Socket socket = new Socket(serverName, serverPort)){
             BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
             PrintWriter out = new PrintWriter(socket.getOutputStream(), true);
-//            System.out.println("connection etablished");//DEBUG
+
+            Scanner sc = new Scanner(System.in);
+            String message;
+            while (true){
+                System.out.println(in.readLine());
+                userName = sc.nextLine();
+                out.println(userName);
+                if(Integer.parseInt(in.readLine()) == 200){
+                    System.out.println("Enjoy");
+                    break;
+                }
+            }
 
             System.out.println(in.readLine());
-            Scanner sc = new Scanner(System.in);
-            userName = sc.nextLine();
-            out.println(userName);
 
             Thread readThread = new Thread(() -> {
                 try {
@@ -38,26 +47,26 @@ public class MyClient2 {
             });
             readThread.start();
 
-            String message;
             while (true) {
                 message = sc.nextLine();
+                if(Objects.equals(message, "!close")){
+                    exitChat();
+                }
                 out.println(message);
             }
 
         }catch (IOException e){
+            System.out.println("cannot establish connection");
             System.exit(1);
         }
     }
 
-    public static void main(String[] args) {
-        Scanner sc = new Scanner(System.in);
-        System.out.println("Enter server's address: ");
-        String name = sc.nextLine();
-        System.out.println("Enter server's port: ");
-        int port = sc.nextInt();
-        sc.nextLine();
+    public void exitChat(){
+        System.exit(-1);
+    }
 
-        MyClient client = new MyClient(name, port);
+    public static void main(String[] args) {
+        MyClient client = new MyClient("localhost", 4892);
         client.start();
     }
 }
