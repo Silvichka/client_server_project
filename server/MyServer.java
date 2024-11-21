@@ -86,19 +86,16 @@ public class MyServer {
             Matcher matcher = pattern.matcher(message);
 
             Set<String> tagged = new HashSet<>();
-            String msg = "";
 
             while (matcher.find()) {
                 if (matcher.group(1) != null) {
                     tagged.add(matcher.group(1));
-                } else if (matcher.group(2) != null) {
-                    msg = matcher.group(2);
                 }
             }
 
             for(ServerThread user: users){
                 if(tagged.contains(user.getNickname())){
-                    user.sendMessage("(" + sender.getNickname() + "): " + msg);
+                    user.sendMessage("(" + sender.getNickname() + "): " + message);
                 }
             }
 

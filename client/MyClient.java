@@ -50,9 +50,10 @@ public class MyClient {
             while (true) {
                 message = sc.nextLine();
                 if(Objects.equals(message, "!close")){
+                    out.println(message);
                     exitChat();
                 }
-                out.println(message);
+                if(!message.isEmpty()) out.println(message);
             }
 
         }catch (IOException e){
